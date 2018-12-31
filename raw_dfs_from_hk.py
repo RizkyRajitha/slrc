@@ -1,21 +1,5 @@
 #!/bin/python3
 
-import math
-import os
-import random
-import re
-import sys
-
-def retarr(pol,n):
-    city = {}
-    for i in range(n+1):   
-            city[i] = []
-    for i in pol:
-        city[i[0]].append(i[1])
-        city[i[1]].append(i[0])
-
-    return city
-
 
 def ddfs(startnode, graph,f):
     vvisited[startnode] = 1    
