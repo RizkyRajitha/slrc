@@ -90,6 +90,7 @@ def  dfs(gpdic,start,end,visited,path):
 
     if start == end:
         print(f"this is the path {path}")
+        path.popleft()
         return path
 
 
@@ -97,7 +98,7 @@ def  dfs(gpdic,start,end,visited,path):
         print(f"stack {path}")
         for node in gpdic[start]:
             print(f" in node - {node}")
-            if visited[node]== -1 and node != -1 and node != 0 :
+            if visited[node]== -1 and node != -1 and node != 0 and node != 1 :
                 print(f" calling for next recursive funtion {node} ")
                 l = dfs(gpdic,node,end,visited,path)
                 if l is not None:
@@ -113,16 +114,16 @@ pathret = deque()
 
 def path_return(gp,start,end):
     pathret = dfs(gp,start,end,visited,path)
+    print(f"i only return DFS -- =  {pathret}")
     return pathret
-#
+
 # if __name__ == '__main__':
-#     gp = {1: [2, -1, -1, -1, 0], 2: [3, 4, 1, 5, 0], 3: [6, -1, 2, 7, 0], 4: [-1, -1, -1, 2, -1], 5: [-1, 2, -1, -1, 1], 6: [-1, -1, 3, -1, -1], 7: [-1, 3, -1, -1, -1], 8: [-1, -1, -1, -1, -1], 9: [-1, -1, -1, -1, -1], 10: [-1, -1, -1, -1, -1], 11: [-1, -1, -1, -1, -1]}
-#
+#     gp = {1: [2, -1, -1, -1, 0], 2: [3, 4, 1, 5, 0], 3: [6, 7, 2, -1, 0], 4: [-1, -1, -1, 2, -1], 5: [-1, 2, -1, -1, 1], 6: [-1, -1, 3, -1, -1], 7: [8, -1, -1, 3, 0], 8: [9, 10, 7, 11, -1], 9: [-1, -1, 8, -1, 1], 10: [-1, -1, -1, 8, 1], 11: [-1, 8, -1, -1, 1], 12: [-1, -1, -1, -1, -1], 13: [-1, -1, -1, -1, -1], 14: [-1, -1, -1, -1, -1], 15: [-1, -1, -1, -1, -1], 16: [-1, -1, -1, -1, -1], 17: [-1, -1, -1, -1, -1], 18: [-1, -1, -1, -1, -1]}
 #
 #     visited = [-1] * 12
 #     path = deque()
 #     pathret = deque()
-#     pathret = dfs(gp, 6, 7, visited, path)
+#     pathret = dfs(gp, 8, 7, visited, path)
 #
 #     print(f"finale path - > {pathret}")
-#
+
