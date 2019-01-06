@@ -61,6 +61,17 @@ def theStack(gpdic, rootNode, priorityList, deQ,orit):
         nodes.append(gpdic[rootNode][0])
         nodes.append(gpdic[rootNode][2])
 
+    if checkVal(priorityList, 0):
+        gpdic[rootNode][4] = 0
+        print("have continius")
+        indexes = [index for index in range(len(priorityList)) if priorityList[index] == 0]
+        print(f"indexex --> {indexes}")
+        for i in indexes:
+            if nodes[i] > 0:
+                print(f" nod -- {nodes[i]}")
+                deQ.append(nodes[i])
+
+
     print(f" nodes -> {nodes}")
     if checkVal(priorityList, 2):
         indexes = [index for index in range(len(priorityList)) if priorityList[index] == 2]
@@ -74,18 +85,11 @@ def theStack(gpdic, rootNode, priorityList, deQ,orit):
             if nodes[i] > 0:
                 gpdic[nodes[i]][4] = 1
                 print(f" nod -- {nodes[i]}")
-                deQ.appendleft(nodes[i])
-                deQ.appendleft(rootNode)
+                deQ.append(rootNode)
+                deQ.append(nodes[i])
 
-    if checkVal(priorityList, 0):
-        gpdic[rootNode][4] = 0
-        print("have continius")
-        indexes = [index for index in range(len(priorityList)) if priorityList[index] == 0]
-        print(f"indexex --> {indexes}")
-        for i in indexes:
-            if nodes[i] > 0:
-                print(f" nod -- {nodes[i]}")
-                deQ.appendleft(nodes[i])
+
+
 
     return [deQ, gpdic]
 
@@ -111,12 +115,12 @@ def main():
     direcions = deque()
     # the dictionary that holds the graph
     gpdic = {1: [-1, -1, -1, -1, -1], 2: [-1, -1, -1, -1, -1], 3: [-1, -1, -1, -1, -1], 4: [-1, -1, -1, -1, -1],
-             5: [-1, -1, -1, -1, -1],
-             6: [-1, -1, -1, -1, -1], 7: [-1, -1, -1, -1, -1], 8: [-1, -1, -1, -1, -1], 9: [-1, -1, -1, -1, -1],
-             10: [-1, -1, -1, -1, -1],
-             11: [-1, -1, -1, -1, -1]}
+             5: [-1, -1, -1, -1, -1],6: [-1, -1, -1, -1, -1], 7: [-1, -1, -1, -1, -1], 8: [-1, -1, -1, -1, -1],
+             9: [-1, -1, -1, -1, -1],10: [-1, -1, -1, -1, -1],11: [-1, -1, -1, -1, -1],12: [-1, -1, -1, -1, -1],
+             13: [-1, -1, -1, -1, -1], 14: [-1, -1, -1, -1, -1], 15: [-1, -1, -1, -1, -1], 16: [-1, -1, -1, -1, -1],
+             17: [-1, -1, -1, -1, -1],18: [-1, -1, -1, -1, -1]}
     current_node = 1
-    visited = [-1] * 15
+    visited = [-1] * 18
     stkoutpre = stackOut(current_node, doubleEntryQ, gpdic, 1, 1, 0, visited)
     oritation = 0
 
@@ -168,16 +172,70 @@ def main():
 
 
         else:
-
-            path = path_return(gp,cur_pre,current_node)
-
             print("error not a nebhour")
-            pass
+            path = path_return(gpdic,cur_pre,current_node)
+
+            if path is not None:
+                now = path.popleft()
+                nochange_path = list(path)
+
+            if path is not None:
+                for nodes in list(path):
+                    nxt = path.popleft()
+                    print(f"now node {now}")
+                    print(f"goto node {nxt}")
+
+                    if gpdic[current_node][4] == 1:
+                        oritation += 2
+
+                    if oritation % 4 == 0 and inlist(gpdic[now], nxt) == 3:
+                        oritation -= 1
+                        print(f"ori -1 {oritation}")
+                    elif oritation % 4 == 1 and inlist(gpdic[now], nxt) == 0:
+                        oritation -= 1
+                        print(f"ori -1 {oritation}")
+                    elif oritation % 4 == 1 and inlist(gpdic[now], nxt) == 2:
+                        oritation += 1
+                        print(f"ori +1 {oritation}")
+                    elif oritation % 4 == 2 and inlist(gpdic[now], nxt) == 3:
+                        oritation += 1
+                        print(f"ori +1 {oritation}")
+                    elif oritation % 4 == 2 and inlist(gpdic[now], nxt) == 1:
+                        oritation -= 1
+                        print(f"ori -1 {oritation}")
+
+                    elif oritation % 4 == 3 and inlist(gpdic[now], nxt) == 2:
+                        oritation -= 1
+                        print(f"ori -1 {oritation}")
+                    elif oritation % 4 == 3 and inlist(gpdic[now], nxt) == 1:
+                        oritation += 1
+                        print(f"ori +1 {oritation}")
+                    elif oritation % 4 == 3 and inlist(gpdic[now], nxt) == 0:
+                        oritation += 1
+                        print(f"ori +1 {oritation}")
+
+                    else:
+                        oritation += inlist(gpdic[now], nxt)
+                        print(f"ori +{inlist(gpdic[now], nxt)} {oritation}")
+                    print(f"orientation >><< -- {oritation}")
+                    now = nxt
+
+                    if nodes == current_node:
+                        print(f"now in node came -- > {nodes}")
+                        if visited[current_node] == -1:
+                            #             stkoutpre[1].append(current_node)
+                            print(f" i = {stkoutpre[2]}")
+
+                            stakout1 = stackOut(current_node, stkoutpre[1], stkoutpre[0], stkoutpre[2], nochange_path[len(nochange_path)-2],oritation,stkoutpre[3])
+                            stkoutpre = stakout1
+                            print(f"in dfs ret func dq = {stakout1[1]}")
+                            print(f"orientation -- > {oritation}")
 
 
 
 
-        # else:
+
+            # else:
         #     cur_pre = current_node
         #
         #     print(f"orientation -- > {oritation}")
@@ -264,10 +322,10 @@ def stackOut(current_node, doubleEntryQ, gpdic, i, perent_node, orit, visited):
                 gpdic[i + 3][2] = current_node
 
             elif orit % 4 == 3:
-                gpdic[current_node][3] = i + 1
-                gpdic[current_node][0] = i + 2
+                gpdic[current_node][3] = i + 3
+                gpdic[current_node][0] = i + 1
                 gpdic[current_node][1] = perent_node
-                gpdic[current_node][2] = i + 3
+                gpdic[current_node][2] = i + 2
 
                 gpdic[i + 1][1] = current_node
                 gpdic[i + 2][2] = current_node
